@@ -8,8 +8,7 @@
   <meta name="description" content="OUSD API Scores Web Map">
   <meta name="author" content="InfoAlameda">
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-  <link rel="stylesheet" href="styles.css">
-
+<link rel="stylesheet" href="styles.css">
   <!--[if lt IE 9]>
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
@@ -25,7 +24,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">Oakland API Scores TEST!!</a>
+        
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li class="active"><a data-match= 'Asian' href="#">ASIAN</a></li>
@@ -47,8 +46,13 @@
 			<div id="map" class="shadow span8"></div>
 			<div class="span4" id="infoArea">
 				
-				<h3 align="center">Here is where the data lives!</h3>
-				<div id="selectedSchool">
+				
+				<div>
+					<h3 align="center">DATA HERE</h3>
+					<h4 id='theDistrict'></h4>
+					<div id="selectedSchool">
+					
+					</div>
 				</div>
 			</div>
 			
@@ -139,10 +143,9 @@ function theFilter(feature,layer){
 function onEachFeature(feature, layer) {
     // does this feature have a property named popupContent?
 		layer.bindPopup("<strong>" + feature.properties.School + "</strong><BR/>" + feature.properties.MailStreet + "<br>Oakland,CA " + feature.properties.Zip);
-		
+		//BIND TO THE CLICK EVENT
 		layer.on('click', function(e){
-			$('#infoArea').append(e.target.feature.properties.School + " " + theSelected + ' : ' + e.target.feature.properties[theSelected] + '<br/>')
-			
+			$('#selectedSchool').append("<div class='shadow detail'>" + e.target.feature.properties.School + " " + theSelected + ' : ' + e.target.feature.properties[theSelected] + '</div>');
 		});
 }
 function resetMap(){
@@ -211,8 +214,9 @@ var legend = L.control({position: 'bottomright'});
 //CONTROLS FOR MENU GO HERE!!
 
 $('.nav a').click(function(a){
+	$('#selectedSchool').empty();
 	theSelected = $(this).attr('data-match');
-	$('#infoArea').append($(this).text() + ' : ' + allScores[theSelected] + '<br/>');
+	$('#theDistrict').html("District-wide Average : " + $(this).text() + ' : ' + allScores[theSelected] + '<br/>');
 	resetMap();
 });
 
