@@ -48,8 +48,10 @@
 			<div class="span4" id="infoArea">
 				
 				<h3 align="center">Here is where the data lives!</h3>
-				
+				<div id="selectedSchool">
+				</div>
 			</div>
+			
 		</div>
     </div>
   <!--script stuff-->
@@ -59,18 +61,19 @@
   <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
   <script src="OUSD_APIScores_1213.geojson"></script>
   <script src="Data.js"></script>
- 
+ <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 
   <script>
-	//ESTABLISH DATA BUCKETS AND COLORS
 	
+	var theSelected = 'Asian';
+	//ESTABLISH DATA BUCKETS AND COLORS
 	function getColor(d) {
     return d > 900 ? '#800026' :
            d > 800  ? '#BD0026' :
            d > 700  ? '#E31A1C' :
            d > 600  ? '#FC4E2A' :
            d > 500  ? '#FD8D3C' :
-                       '#FFEDA0';
+                       '#cdc9c9';
 	}
 	
 	
@@ -89,11 +92,12 @@
 	
 	//DYNAMICALLY ASSIGN A STYLE TO LAYER
 	function style(feature) {
-    return {
-        fillColor: getColor(feature.properties[$('.active a').attr('data-match')]),
+    console.log(theSelected);
+	return {
+        fillColor: getColor(feature.properties[theSelected]),
         weight: 2,
         opacity: 1,
-        color: 'black',
+        color: getColor(feature.properties[theSelected]),
         fillOpacity: 0.7
     };
 }
@@ -128,21 +132,37 @@ function resetHighlight(e) {
 			info.update();
 		}
 		
+function theFilter(feature,layer){
+	//console.log("yeah : " + theSelected);
+	return feature.properties[theSelected] >0;
+}
 function onEachFeature(feature, layer) {
     // does this feature have a property named popupContent?
 		layer.bindPopup("<strong>" + feature.properties.School + "</strong><BR/>" + feature.properties.MailStreet + "<br>Oakland,CA " + feature.properties.Zip);
 		
+		layer.on('click', function(e){
+			$('#infoArea').append(e.target.feature.properties.School + " " + theSelected + ' : ' + e.target.feature.properties[theSelected] + '<br/>')
+			
+		});
 }
 function resetMap(){
-	L.geoJson(schools,{
+	try {
+		
+		map.removeLayer(theSchoolLayer);
+		console.log('remove');
+	}catch(e){
+	console.log('nothin');
+	}
+	
+	
+	theSchoolLayer = L.geoJson(schools,{
 		style:style,
 		pointToLayer:function(feature,latlng){
 			return L.circleMarker(latlng,geojsonMarkerOptions);
 		},
+		filter:theFilter,
 		onEachFeature:onEachFeature
 		}).addTo(map)
-	
-	
 }
 
 
@@ -193,7 +213,7 @@ var legend = L.control({position: 'bottomright'});
 $('.nav a').click(function(a){
 	theSelected = $(this).attr('data-match');
 	$('#infoArea').append($(this).text() + ' : ' + allScores[theSelected] + '<br/>');
-	
+	resetMap();
 });
 
   </script>
