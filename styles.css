@@ -1,3 +1,23 @@
+body {
+	font-size:13px
+}
+#summaryBox{
+	text-align:center;
+	padding:10px;
+}
+#theTotal{
+	
+	font-size:48px;
+	color:blue;
+	line-height:50px;
+	font-weight:bold;
+	margin-top:20px;
+	text-align:center;
+
+}
+#theScores {
+	margin-right:10px
+}
 #legendList{
 	margin-top:30px;
 	background-color:white;
@@ -8,14 +28,15 @@
 	 list-style-type: none;
 	 color:white;
 	 font-size:14px;
-	 font-weight:bold
-	 margin:10px;
+	 font-weight:bolder;
+	 
 	 padding:20px;
 	 min-width:30px;
 }
 
 #legendList li  a {
-	display:inline
+	display:inline;
+	font-weight:bolder
 }
 .detail {
 	padding:10px;
@@ -85,4 +106,17 @@ border-radius: 10px; /* future proofing */
 .info h4 {
     margin: 0 0 5px;
     color: #777;
+}
+
+#selectedSchool {
+	height:400px;
+	overflow:scroll
+
+}
+#theSchools a {
+	color:#333333
+}
+#theScores th {
+	text-align:left;
+
 }
