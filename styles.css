@@ -1,3 +1,22 @@
+#legendList{
+	margin-top:30px;
+	background-color:white;
+
+}
+#legendList li {
+	display:inline;
+	 list-style-type: none;
+	 color:white;
+	 font-size:14px;
+	 font-weight:bold
+	 margin:10px;
+	 padding:20px;
+	 min-width:30px;
+}
+
+#legendList li  a {
+	display:inline
+}
 .detail {
 	padding:10px;
 	margin-bottom:10px;
@@ -47,13 +66,14 @@
 border-radius: 10px; /* future proofing */
 -khtml-border-radius: 10px; /* for old Konqueror browsers */
 		}
-		.legend i {
-			width: 50px;
-			height: 15px;
-			float: left;
-			margin-right: 8px;
-			opacity: 0.7;
-		}
+		
+#legendList i {
+	width: 30px;
+	height: 15px;
+	float: left;
+	margin-right: 8px;
+	opacity: 0.7;
+}
 .info {
     padding: 6px 8px;
     font: 14px/16px Arial, Helvetica, sans-serif;
