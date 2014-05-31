@@ -66,8 +66,8 @@
 						</tbody>
 					</table>
 				</div>
-				<div id="summaryBox">
-					This will have large info for each group!
+				<div id="summaryBox" class="shadow">
+					<canvas id="chartArea" height="400" width="400"></canvas>
 				</div>
 				</div>
 			</div>
@@ -95,10 +95,13 @@
   <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
   <script src="OUSD_APIScores_1213.geojson"></script>
   <script src="Data.js"></script>
+  <script type="text/javascript" src="chart.js"></script>
+
  
 
   <script>
 	
+
 	var theSelected = 'Schoolwide';
 	//ESTABLISH DATA BUCKETS AND COLORS
 	function getColor(d) {
@@ -170,14 +173,57 @@ function theFilter(feature,layer){
 	//console.log("yeah : " + theSelected);
 	return feature.properties[theSelected] >0;
 }
+//GOOGLE CHART
+function drawChart(feature){
+	var data = {
+		labels: ["All Students","Asian","Black or African American","Hispanic or Latino","White"],
+		datasets:[
+				{
+				fillColor : "rgba(0,0,255,.75)",
+				strokeColor : "rgba(0,0,255,,1)",
+				data : [feature.properties.Schoolwide,feature.properties.Asian,feature.properties.Black,feature.properties.Hispanic,feature.properties.White]
+				},
+				{
+				fillColor : "rgba(128,128,128,.75)",
+				strokeColor : "rgba(128,128,128,1)",
+				data : [721,824,644,687,896]
+				}
+				
+		]
+	}
+	
+	
+// Set chart options
+     
+		var options = {
+			scaleOverride:true,
+			scaleSteps:8,
+			scaleStepWidth:50,
+			scaleStartValue:500,
+			
+			
+		
+		}
+        // Instantiate and draw our chart, passing in some options.
+        var ctx = document.getElementById('chartArea').getContext("2d");
+		var chart = new Chart(ctx).Bar(data,options);
+	
 
+
+}
 function onEachFeature(feature, layer) {
 		// make the popup
-		layer.bindPopup("<strong>" + feature.properties.School + "</strong><BR/>" + feature.properties.MailStreet + "<br>Oakland,CA " + feature.properties.Zip);
+		
+		layer.bindPopup("<div id='thePopup'><strong>" + feature.properties.School + "</strong><BR/>" + feature.properties.MailStreet + "<br>Oakland,CA " + feature.properties.Zip
+		+ "<br/>All Students: " + feature.properties.Schoolwide + "</div>"
+		);
+		
+		
 		//create row in table
 		$('#theSchools').append("<tr><td><a href='#'id='s" + feature.properties.NCESSchool + "'>" + feature.properties.School + "</a></td><td>" + feature.properties[theSelected] + "</td><td>up</td></tr>");
 		//bind to map popup
 		$("#s" + feature.properties.NCESSchool).click(function(){
+			drawChart(feature);
 			layer.openPopup();
 			});
 		
@@ -228,6 +274,7 @@ var info = L.control();
 
 //CREATE A LEGEND!!!
 	$(document).ready(function(){
+		
 		var grades = [500,600,700,800,900],
 			labels = [],
 			from,to;
@@ -241,7 +288,7 @@ var info = L.control();
 					from + (to ? '&ndash;' + to : '+') + '</li>');
 		$('#legendList').html(labels.join(''));
 	}
-	$('#summaryBox').html("District-wide Average :<h4> All Students</h4><span id='theTotal'>" + allScores.All + '</span>');
+	//$('#summaryBox').html("District-wide Average :<h4> All Students</h4><span id='theTotal'>" + allScores.All + '</span>');
 	 $("#theScores").tablesorter(); 
 	});
 	
@@ -250,7 +297,7 @@ var info = L.control();
 $('.nav a').click(function(a){
 	$('#theSchools tr').empty();
 	theSelected = $(this).attr('data-match');
-	$('#summaryBox').html("District-wide Average : " + $(this).text() + ' : ' + allScores[theSelected] + '<br/>');
+	//$('#summaryBox').html("District-wide Average : " + $(this).text() + ' : ' + allScores[theSelected] + '<br/>');
 	resetMap();
 });
 
